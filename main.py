@@ -9,8 +9,8 @@ from core.logger import get_logger, setup_logger
 from gmail.client import build_gmail_client
 from gmail.fetcher import (
     fetch_emails_by_subject,
+    get_attachments,
     get_processed_ids,
-    get_xlsx_attachments,
     mark_as_processed,
 )
 from spreadsheet.downloader import download_attachment
@@ -19,7 +19,11 @@ from spreadsheet.processor import filter_columns, read_xlsx
 
 
 def run() -> int:
-    """Run one sync cycle."""
+    """Run one full synchronization cycle.
+
+    Returns:
+        Process exit code (`0` for success, `1` for failure).
+    """
     root_dir = Path(__file__).resolve().parent
     logger = setup_logger(root_dir / 'logs' / 'app.log')
     app_logger = get_logger('main')
@@ -55,9 +59,12 @@ def run() -> int:
             continue
 
         try:
-            attachments = get_xlsx_attachments(service, email_id)
+            attachments = get_attachments(service, email_id)
             if not attachments:
-                app_logger.info('No xlsx attachments for message id=%s', email_id)
+                app_logger.info(
+                    'No xlsx attachments for message id=%s',
+                    email_id,
+                )
                 mark_as_processed(processed_path, email_id)
                 total_skipped += 1
                 continue
@@ -85,6 +92,7 @@ def run() -> int:
 
                 if not config.KEEP_DOWNLOADS:
                     filepath.unlink(missing_ok=True)
+                    app_logger.info('Removed downloaded file: %s', filepath)
 
             save_base(base_df, str(base_path))
             mark_as_processed(processed_path, email_id)
@@ -92,7 +100,11 @@ def run() -> int:
             app_logger.info('Processed message id=%s', email_id)
         except Exception as exc:
             total_errors += 1
-            app_logger.error('Error processing message id=%s: %s', email_id, exc)
+            app_logger.error(
+                'Error processing message id=%s: %s',
+                email_id,
+                exc,
+            )
 
     logger.info(
         'Cycle summary | processed=%d | skipped=%d | errors=%d',
@@ -105,4 +117,3 @@ def run() -> int:
 
 if __name__ == '__main__':
     raise SystemExit(run())
-

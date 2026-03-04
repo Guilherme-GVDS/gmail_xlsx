@@ -23,7 +23,12 @@ KEEP_DOWNLOADS = os.getenv('KEEP_DOWNLOADS', 'true').lower() == 'true'
 
 
 def validate_config() -> None:
-    """Validate required runtime configuration."""
+    """Validate required runtime configuration.
+
+    Raises:
+        ValueError: If `ASSUNTO` is empty.
+        FileNotFoundError: If the base spreadsheet does not exist.
+    """
     if not ASSUNTO:
         raise ValueError('ASSUNTO must not be empty.')
 
@@ -32,4 +37,3 @@ def validate_config() -> None:
         raise FileNotFoundError(
             f'Base spreadsheet not found: {base_path}'
         )
-

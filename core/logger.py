@@ -12,7 +12,14 @@ LOGGER_NAME = 'gmail_xlsx_sync'
 
 
 def setup_logger(log_file: Path) -> logging.Logger:
-    """Create and configure project logger."""
+    """Create and configure project logger.
+
+    Args:
+        log_file: Full path to the log file.
+
+    Returns:
+        Configured application logger.
+    """
     logger = logging.getLogger(LOGGER_NAME)
     logger.setLevel(logging.INFO)
     logger.propagate = False
@@ -42,6 +49,12 @@ def setup_logger(log_file: Path) -> logging.Logger:
 
 
 def get_logger(name: str) -> logging.Logger:
-    """Return child logger from root project logger."""
-    return logging.getLogger(f'{LOGGER_NAME}.{name}')
+    """Return a child logger from the project root logger.
 
+    Args:
+        name: Child logger suffix.
+
+    Returns:
+        Logger instance scoped under `gmail_xlsx_sync`.
+    """
+    return logging.getLogger(f'{LOGGER_NAME}.{name}')
