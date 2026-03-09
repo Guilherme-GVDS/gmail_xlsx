@@ -1,33 +1,33 @@
 # gmail_xlsx_sync
 
-CLI script in Python to fetch `.xlsx` attachments from Gmail by subject and append
-data to a base spreadsheet.
+Script CLI em Python para buscar anexos `.xlsx` no Gmail por assunto e
+concatenar os dados em uma planilha base.
 
-## Prerequisites
+## Pré-requisitos
 
-- Python 3.13
-- Google account with Gmail enabled
-- Access to Google Cloud Console
+-   Python 3.13
+-   Conta Google com Gmail habilitado
+-   Acesso ao Google Cloud Console
 
-## Setup
+## Configuração
 
-1. Create and activate a virtual environment.
-2. Install dependencies:
+1.  Crie e ative um ambiente virtual.
+2.  Instale as dependências:
 
-```bash
+``` bash
 pip install -r requirements.txt
 ```
 
-3. Create OAuth2 credentials in Google Cloud Console:
-   - Create a project (or select an existing one).
-   - Enable **Gmail API**.
-   - Configure OAuth consent screen.
-   - Create OAuth Client ID as **Desktop app**.
-   - Download credentials and save as `credentials.json` in project root.
-     (or set `GOOGLE_CREDENTIALS_PATH` in `.env`).
-4. Copy `.env.example` to `.env` and set values:
+3.  Crie credenciais OAuth2 no Google Cloud Console:
+    -   Crie um projeto (ou selecione um existente).
+    -   Ative a **Gmail API**.
+    -   Configure a tela de consentimento OAuth.
+    -   Crie um OAuth Client ID do tipo **Desktop app**.
+    -   Baixe as credenciais e salve como `credentials.json` na raiz do
+        projeto. (ou configure `GOOGLE_CREDENTIALS_PATH` no `.env`).
+4.  Copie `.env.example` para `.env` e configure os valores:
 
-```dotenv
+``` dotenv
 ASSUNTO=Relatorio Financeiro Mensal
 BASE_SPREADSHEET_PATH=core/base.xlsx
 DOWNLOADS_DIR=downloads
@@ -37,20 +37,15 @@ GOOGLE_CREDENTIALS_PATH=credentials.json
 GOOGLE_TOKEN_PATH=token.json
 ```
 
-5. Ensure `core/base.xlsx` exists with the expected output columns.
-6. Run `python main.py` once to complete OAuth in the browser and generate
-   `token.json`. Next runs reuse this token.
+5.  Garanta que `core/base.xlsx` exista com as colunas esperadas de
+    saída.
 
-## Run
+6.  Execute `python main.py` uma vez para completar a autenticação OAuth
+    no navegador e gerar o arquivo `token.json`. Nas próximas execuções
+    o token será reutilizado automaticamente.
 
-```bash
+## Execução
+
+``` bash
 python main.py
-```
-
-## Schedule (cron)
-
-To run every day at 08:00:
-
-```bash
-0 8 * * * cd /path/to/gmail_xlsx && /path/to/python main.py >> logs/cron.log 2>&1
 ```
